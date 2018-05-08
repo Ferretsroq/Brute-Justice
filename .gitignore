@@ -8,6 +8,7 @@ __pycache__/BruteJusticeGrid.cpython-36.pyc
 __pycache__/BruteJusticeSpreadsheets.cpython-36.pyc
 asdf.png
 client_secret.json
+credentials.json
 
 google_api_key
 foo.png
@@ -21,3 +22,5 @@ Default Grid.png
 temp grid.png
 test.png
 testing.png
+quickstart.py
+__pycache__/quickstart.cpython-36.pyc
