@@ -9,7 +9,7 @@ import re
 from PIL import Image, ImageDraw
 import shelve
 import numpy as np
-import PyPDF2 as pdf
+#import PyPDF2 as pdf
 import BruteJusticeGrid as grid
 
 from apiclient import discovery
@@ -19,7 +19,7 @@ from oauth2client.file import Storage
 
 
 client = discord.Client()
-google_api_key = open('./google_api_key').read()
+#google_api_key = open('./google_api_key').read()
 import pprint
 import sys
 
@@ -296,6 +296,8 @@ class MyClient(discord.Client):
 			await message.channel.send(file=discord.File('Grid.png'))
 			image.close()
 			pasteImage.close()
+		elif(message.content.startswith('!logout')):
+			await self.logout()
 
 		"""elif(message.content.startswith('!monster')):
 			pattern = '!monster (?P<Name>.+)'
@@ -318,6 +320,7 @@ class MyClient(discord.Client):
 				for monsterString in monsterStrings:
 					await message.channel.send(monsterString)
 					"""
+
 
 
 
