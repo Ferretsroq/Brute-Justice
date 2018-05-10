@@ -25,9 +25,15 @@ players = ['Subotai']
 allies = ['Chahil']
 
 def HexagonArray(lengthSquares=12):
+    ''' Defines an array in the shape of a hexagon
+        lengthSquares is the length of the bounding square around the hexagon
+        The middle row of the hexagon spans the entire length '''
+    # Initialize the array
     dataArray = np.zeros((lengthSquares,lengthSquares))
+    # Account for even and odd-numbered sizes
     dataArray[len(dataArray)//2] = 1
     dataArray[len(dataArray)//2-(1-len(dataArray)%2)] = 1
+    # Assign the squares based on the shape of a hexagon
     for row in range(1,len(dataArray)//2-(1-len(dataArray)%2)):
         difference = (len(dataArray)//2-(1-len(dataArray)%2)) - row
         dataArray[row][int(np.ceil(difference/2)):-int(np.ceil(difference/2))] = [1]
@@ -37,10 +43,19 @@ def HexagonArray(lengthSquares=12):
     return dataArray
 
 def RectangleArray(widthSquares=12, heightSquares=6):
+    ''' Defines an array in the shape of a rectangle
+        widthSquares = the width of the array
+        heightSquares = the height of the array'''
     dataArray = np.ones((heightSquares, widthSquares))
     return dataArray
 
 def RectangleImage(widthSquares=12, heightSquares=6, backgroundColor=discordDarkGray, gridColor=discordGray, scaling=100):
+    '''Defines the base image for a rectangle
+       widthSquares = the width of the image, in grid squares
+       heightSquares = the height of the image, in grid squares
+       backgroundColor = the color of the image where there are no squares
+       gridColor = the color of the image where there are squares
+       scaling = the pixel size of the squares'''
     width = widthSquares*scaling
     height = heightSquares*scaling
     image = Image.new(mode='RGB', size=(width, height), color=gridColor)
@@ -49,6 +64,11 @@ def RectangleImage(widthSquares=12, heightSquares=6, backgroundColor=discordDark
     return image
 
 def HexagonImage(lengthSquares=12, backgroundColor=discordDarkGray, gridColor=discordGray, scaling=100):
+    '''Defines the base image for a hexagon
+       lengthSquares = the side length of the image, in grid squares
+       backgroundColor = the color of the image where there are no squares
+       gridColor = the color of the image where there are squares
+       scaling = the pixel size of the squares'''
     image = Image.new(mode='RGB', size=(lengthSquares*scaling,lengthSquares*scaling), color=backgroundColor)
     drawer = ImageDraw.Draw(image)
     length=(lengthSquares*scaling)//2-1
@@ -58,22 +78,38 @@ def HexagonImage(lengthSquares=12, backgroundColor=discordDarkGray, gridColor=di
     return image
 
 def GridFromArray(dataArray, image, color=discordDarkGray, scaling=100):
+    ''' Draws a grid image based on the array coming in
+        dataArray = the 2-D array defining a grid
+        image = the base image to draw the grid on
+        color = the color of the gridlines. Ideally this matches the backgroundColor of the image
+        scaling = the pixel size of the squares'''
+    # The drawer object handles drawing on an existing image
     drawer = ImageDraw.Draw(image)
+    # I won't lie to you, I think this was demo code that's no longer being used
     mask = Image.new('L', (80,80), 0)
     draw = ImageDraw.Draw(mask)
     draw.ellipse((0,0,80,80), fill=255)
+    # Draw the squares of the array on the image
+    # Step through each row of the array
     for row in range(len(dataArray)):
+        # Step through each column of the array
         for column in range(len(dataArray[row])):
+            # In case this number is a float or a string of a number, convert to int
             value = int(dataArray[row][column])
+            # If something exists, draw a square
             if(icons[value] != 'blank'):
+                # Draw the lines of the square
+                # scaling defines the pixel length of a square's side
                 drawer.line((column*scaling, row*scaling, column*scaling, ((row+1)*scaling)), fill=color, width=1)
                 drawer.line((column*scaling, row*scaling, (column+1)*scaling, row*scaling), fill=color, width=1)
                 drawer.line(((column+1)*scaling, row*scaling, (column+1)*scaling, ((row+1)*scaling)), fill=color, width=1)
                 drawer.line((column*scaling, (row+1)*scaling, (column+1)*scaling, ((row+1)*scaling)), fill=color, width=1)
+            # Need to fill in extra on the edges of the image
             if(column == len(dataArray[row])-1 and icons[value] != 'blank'):
                 drawer.line(((column+1)*scaling-1, row*scaling, (column+1)*scaling-1, ((row+1)*scaling)), fill=color, width=1)
             if(row == len(dataArray)-1 and icons[value] != 'blank'):
                 drawer.line((column*scaling, (row+1)*scaling-1, (column+1)*scaling, (row+1)*scaling-1), fill=color, width=1)
+            # Draw a ring and token if something exists in the square
             if(value > 1 and value in icons):
                 #drawer.ellipse((column*scaling+1, row*scaling+1, (column+1)*scaling-1, (row+1)*scaling-1), fill='black')
                 ringColor = 'gray'
@@ -90,6 +126,11 @@ def GridFromArray(dataArray, image, color=discordDarkGray, scaling=100):
     return image
 
 def LabelGrid(inputImage, widthSquares=12, heightSquares=12):
+    ''' Take a grid image and label the sides with letters and numbers
+        inputImage = image with a grid already drawn
+        widthSquares = width of the image in squares
+        heightSquares = height of the image in squares'''
+    # Scale the font size to the size of the image
     scalingWidth = int(inputImage.width/widthSquares)
     scalingHeight = int(inputImage.height/heightSquares)
     fontSizeWidth = scalingWidth//2
@@ -97,10 +138,13 @@ def LabelGrid(inputImage, widthSquares=12, heightSquares=12):
 
     fontWidth = ImageFont.truetype('consola.ttf', fontSizeWidth)
     fontHeight = ImageFont.truetype('consola.ttf', fontSizeHeight)
+    # Keep everything uppercase because we aren't savages
     alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    # Rescale the image for the new characters
     outputImage = Image.new('RGBA', (inputImage.width+scalingWidth, inputImage.height+scalingHeight))
     gridDraw = ImageDraw.Draw(outputImage)
     outputImage.paste(inputImage, (fontSizeWidth, fontSizeHeight))
+    # Fill in the appropriate letters and numbers for each row and column
     for square in range(widthSquares):
         gridDraw.text((square*scalingWidth+(scalingWidth/2)-(fontSizeWidth/2+1)+fontSizeWidth, -1), '{}'.format(alphabet[square]), fill='black', font=fontWidth)
         gridDraw.text((square*scalingWidth+(scalingWidth/2)-(fontSizeWidth/2-1)+fontSizeWidth, 1), '{}'.format(alphabet[square]), fill='black', font=fontWidth)
@@ -132,6 +176,7 @@ def LabelGrid(inputImage, widthSquares=12, heightSquares=12):
     return outputImage
 
 class Grid:
+    ''' Keeps the data of a grid in an object.'''
     def __init__(self, shape='rectangle', width=12, height=12, scaling=100, backgroundColor=discordDarkGray, gridColor=discordGray):
         self.shape = shape
         self.width = width
