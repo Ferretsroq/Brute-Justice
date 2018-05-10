@@ -296,6 +296,8 @@ class MyClient(discord.Client):
 			await message.channel.send(file=discord.File('Grid.png'))
 			image.close()
 			pasteImage.close()
+		elif(message.content.startswith('!logout')):
+			await self.logout()
 
 		"""elif(message.content.startswith('!monster')):
 			pattern = '!monster (?P<Name>.+)'
@@ -318,6 +320,7 @@ class MyClient(discord.Client):
 				for monsterString in monsterStrings:
 					await message.channel.send(monsterString)
 					"""
+
 
 
 
