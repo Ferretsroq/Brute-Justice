@@ -9,7 +9,7 @@ import re
 from PIL import Image, ImageDraw
 import shelve
 import numpy as np
-import PyPDF2 as pdf
+#import PyPDF2 as pdf
 import BruteJusticeGrid as grid
 
 from apiclient import discovery
@@ -19,7 +19,7 @@ from oauth2client.file import Storage
 
 
 client = discord.Client()
-google_api_key = open('./google_api_key').read()
+#google_api_key = open('./google_api_key').read()
 import pprint
 import sys
 
