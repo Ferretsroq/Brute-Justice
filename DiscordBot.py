@@ -11,6 +11,7 @@ import shelve
 import numpy as np
 #import PyPDF2 as pdf
 import BruteJusticeGrid as grid
+import CombatMessage
 
 from apiclient import discovery
 from oauth2client import client as cl
@@ -43,6 +44,9 @@ gridSpacing = 100
 #mm3Path = 'F:\\RPG Stuff\\4e\\PDFs\\Monster Manual 3.pdf'
 #monsterDict = {}
 icons = grid.icons
+
+ferretsroq = "<@111529517541036032>"
+ari = "<@112754131558481920>"
 
 #def InitializeMonsters(path, inputDictionary):
 #	pdfFileObj = open(path, 'rb')
@@ -162,12 +166,40 @@ class MyClient(discord.Client):
 		print(self.user.name)
 		print(self.user.id)
 		print('------')
+		self.activeMessage = None
 
+	async def on_reaction_add(self, reaction, user):
+		print(reaction.message == self.activeMessage)
+		print(reaction.emoji)
 	async def on_message(self, message):
 		if message.content.startswith('!test'):
-			im = Image.new('RGB', (100,100), 'green')
-			await message.channel.send(file=discord.File(im.tobytes()))
-			await message.channel.send(':thinking:')
+			#im = Image.new('RGB', (100,100), 'green')
+			#await message.channel.send(file=discord.File(im.tobytes()))
+			#await message.channel.send(':thinking:')
+			#color = discord.Colour.from_rgb(255,0,255)
+			#embed = discord.Embed(title=":crossed_swords: **FIGHT** :crossed_swords:", type="rich", description=" <@111529517541036032>", color=color)
+			#embed.add_field(name="Character", value="Theron")
+			#embed.add_field(name="Monster 0", value="Chronal Feeder")
+			#embed.add_field(name="Monster 1", value="Chronal Feeder")
+			#embed.add_field(name="Monster 2", value="Chronal Feeder")
+			#self.activeMessage = message
+			#self.activeMessage = await message.channel.send(embed=embed)
+			#await self.activeMessage.add_reaction("0\u20e3")
+			#await self.activeMessage.add_reaction("1\u20e3")
+			#await self.activeMessage.add_reaction("2\u20e3")
+			#await self.activeMessage.add_reaction("\u2705")
+			#print(message.id)
+			#def check(reaction, user):
+			#	return user == message.author and reaction.message.id == self.activeMessage.id
+			#try:
+			#	reaction, user = await client.wait_for('reaction_add', timeout=60.0, check=check)
+			#except asyncio.TimeoutError:
+			#	await message.channel.send('No reaction')
+			#else:
+			#	await message.channel.send('Reaction sent')
+			#	await message.channel.send(str(reaction))
+			self.activeMessage = CombatMessage.CombatMessage('Theron', ['Chronal Feeder', 'Voltron', 'Crawlybugs', 'foo', 'bar', 'baz'], ferretsroq)
+			await self.activeMessage.send(message.channel)
 		elif(message.content.startswith('!help')):
 			await message.channel.send('Hi there! My name is BruteJustice, the friendly robot!')
 			await message.channel.send('These are my current implemented commands:\n' + '\n'.join(implementedCommands)+'\nI hope you find that I am much friendlier here than I was in Midas. Those were my rebellious days.')
@@ -329,3 +361,5 @@ if(__name__ == '__main__'):
 	#InitializeMonsters(mm3Path, monsterDict)	
 	client = MyClient()
 	client.run('MzUzNjY0MTQwMTc2MjYxMTMx.DIzCkw.CPNh064jbITfV2Y2rke8PVhnPL8')
+	client.logout()
+	client.close()
