@@ -167,10 +167,18 @@ class MyClient(discord.Client):
 		print(self.user.id)
 		print('------')
 		self.activeMessage = None
+		self.activeUser = None
 
 	async def on_reaction_add(self, reaction, user):
-		print(reaction.message == self.activeMessage)
-		print(reaction.emoji)
+		if(user == self.activeUser and reaction.message.id == self.activeMessage.message.id):
+			await reaction.message.channel.send('You reacted with {}!'.format(str(reaction)))
+			if(str(reaction) == CombatMessage.emojiQuestion):
+				await self.activeMessage.Help()
+		#print(reaction.message)
+		#print(self.activeMessage.message)
+		#print(reaction.message.id == self.activeMessage.message.id)
+		#if(reaction.message.id == self.activeMessage.message.id):
+			#await reaction.message.channel.send("You reacted with {}".format(str(reaction)))
 	async def on_message(self, message):
 		if message.content.startswith('!test'):
 			#im = Image.new('RGB', (100,100), 'green')
@@ -198,8 +206,18 @@ class MyClient(discord.Client):
 			#else:
 			#	await message.channel.send('Reaction sent')
 			#	await message.channel.send(str(reaction))
-			self.activeMessage = CombatMessage.CombatMessage('Theron', ['Chronal Feeder', 'Voltron', 'Crawlybugs', 'foo', 'bar', 'baz'], ferretsroq)
+			self.activeMessage = CombatMessage.CombatMessage('Theron', ['Chronal Feeder', 'Voltron', 'Crawlybugs', 'foo', 'bar', 'baz'], message.author.mention)
+			self.activeUser = message.author
 			await self.activeMessage.send(message.channel)
+			#def check(reaction, user):
+		#		return user == message.author and reaction.message.id == self.activeMessage.message.id
+			#try:
+			#	reaction, user = await client.wait_for('reaction_add', timeout=60.0, check=check)
+			#except asyncio.TimeoutError:
+			#	await message.channel.send('No reaction')
+			#else:
+			#	await message.channel.send('You reacted with {}'.format(str(reaction)))
+			
 		elif(message.content.startswith('!help')):
 			await message.channel.send('Hi there! My name is BruteJustice, the friendly robot!')
 			await message.channel.send('These are my current implemented commands:\n' + '\n'.join(implementedCommands)+'\nI hope you find that I am much friendlier here than I was in Midas. Those were my rebellious days.')
