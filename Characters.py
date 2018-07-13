@@ -1,6 +1,7 @@
 from enum import Enum
 import random
 import skills
+import BruteJusticeSpreadsheets
 
 class Stat(Enum):
 	"""Simple Enum for identifying stat pools"""
@@ -16,10 +17,10 @@ class Weapon(Enum):
 
 class Pool:
 	"""Class that holds methods relating to a character's pool"""
-	def __init__(self, maximum=0, edge=0):
+	def __init__(self, current=0, maximum=0, edge=0):
 		"""Define the max of the pool, current value, and the character's edge"""
 		self.max = maximum
-		self.current = maximum
+		self.current = current
 		self.edge = edge
 	def __repr__(self):
 		return "{}/{}".format(self.current, self.max)
@@ -53,10 +54,13 @@ class Pool:
 
 class Character:
 	"""Holds information about a character."""
-	def __init__(self, name='', 
-                 might=0, 
-                 speed=0, 
-                 intellect=0, 
+	def __init__(self, name='',
+				 mightCurrent=0,
+				 speedCurrent=0,
+				 intellectCurrent=0, 
+                 mightMax=0, 
+                 speedMax=0, 
+                 intellectMax=0, 
                  mightEdge=0, 
                  speedEdge=0, 
                  intellectEdge=0,
@@ -64,9 +68,9 @@ class Character:
                  weapon = Weapon.Light):
 		"""Initialize the character pools, skills, and weapon damage"""
 		self.name = name
-		self.might = Pool(might, mightEdge)
-		self.speed = Pool(speed, speedEdge)
-		self.intellect = Pool(intellect, intellectEdge)
+		self.might = Pool(mightCurrent, mightMax, mightEdge)
+		self.speed = Pool(speedCurrent, speedMax, speedEdge)
+		self.intellect = Pool(intellectCurrent, intellectMax, intellectEdge)
 		self.adventureSkills = []
 		self.combatSkills = []
 		self.craftingSkills = []
@@ -137,3 +141,38 @@ class Character:
 		social = '\nSOCIAL SKILLS:\n' + '\n'.join(self.socialSkills) + '\n'
 		skills = '\n' + adventuring + combat + crafting + numenera + social
 		return "Name: {}\nMight: {}\nSpeed: {}\nIntellect: {}\nSkills: {}".format(self.name, self.might, self.speed, self.intellect, skills)
+
+
+
+def LoadCharacter(sheetID):
+	data = BruteJusticeSpreadsheets.ReadSpreadsheet(['Info', 'Pools', 'Skills'], sheetID)
+	info = data[0]
+	pools = data[1]
+	skillsData = data[2]
+	name = info[0][1]
+	descriptor = info[1][1]
+	focus = info[2][1]
+	mightCurrent = pools[0][1]
+	speedCurrent = pools[1][1]
+	intellectCurrent = pools[2][1]
+	mightMax = pools[0][2]
+	speedMax = pools[1][2]
+	intellectMax = pools[2][2]
+	mightEdge = pools[0][3]
+	speedEdge = pools[1][3]
+	intellectEdge = pools[2][3]
+	skillsList = []
+	for skill in skillsData:
+		if skills.isSkill(skill[0]):
+			skillsList.append(skill[0])
+	return Character(name=name,
+					 mightCurrent=mightCurrent,
+					 speedCurrent=speedCurrent,
+					 intellectCurrent=intellectCurrent,
+					 mightMax=mightMax,
+					 speedMax=speedMax,
+					 intellectMax=intellectMax,
+					 mightEdge=mightEdge,
+					 speedEdge=speedEdge,
+					 intellectEdge=intellectEdge,
+					 inputSkills=skillsList)

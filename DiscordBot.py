@@ -171,9 +171,28 @@ class MyClient(discord.Client):
 
 	async def on_reaction_add(self, reaction, user):
 		if(user == self.activeUser and reaction.message.id == self.activeMessage.message.id):
-			await reaction.message.channel.send('You reacted with {}!'.format(str(reaction)))
+			#await reaction.message.channel.send('You reacted with {}!'.format(str(reaction)))
 			if(str(reaction) == CombatMessage.emojiQuestion):
 				await self.activeMessage.Help()
+			if(str(reaction) in CombatMessage.emojiNumbers):
+				pass
+			if(str(reaction) == CombatMessage.emojiCheck):
+				print('foo')
+				targets = []
+				for react in reaction.message.reactions:
+					print('bar')
+					async for x in react.users():
+						if(self.activeUser == x and str(react) in CombatMessage.emojiNumbers):
+							targets.append(react)
+						print(x)
+				await self.activeMessage.message.edit(embed=self.activeMessage.embed, content="You are targeting {}!".format(str(targets[0])))
+				await self.activeMessage.SetReactions()
+				print(targets)
+
+					#for user in react.users():
+					#	print('baz')
+			#			print("{}: {}".format(str(react), user))
+				#print([(str(x), list(x.users().flatten())) for x in reaction.message.reactions])
 		#print(reaction.message)
 		#print(self.activeMessage.message)
 		#print(reaction.message.id == self.activeMessage.message.id)

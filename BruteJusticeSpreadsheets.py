@@ -44,10 +44,15 @@ def ReadSpreadsheet(rangeNames, sheetid):
 	service = discovery.build('sheets', 'v4', http=http, discoveryServiceUrl=discoveryUrl)
 	spreadsheetId = sheetid
 	result = service.spreadsheets().values().batchGet(spreadsheetId=spreadsheetId, ranges=rangeNames).execute()
-	if('values') in result.get('valueRanges', [])[0].keys():
-		values = result.get('valueRanges', [])[0]['values']
-		return values
-	return []
+	values = []
+	valueRanges = result.get('valueRanges', [])
+	for item in valueRanges:
+		if('values') in item.keys():#result.get('valueRanges', [])[0].keys():
+			values.append(item['values'])
+			#return values
+			#return result
+	#return []
+	return values
 
 def WriteSpreadsheet(spreadsheetID, sheet=1, cell='A1', value=0):
     credentials = get_credentials()
