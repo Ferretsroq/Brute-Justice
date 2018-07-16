@@ -152,15 +152,15 @@ def LoadCharacter(sheetID):
 	name = info[0][1]
 	descriptor = info[1][1]
 	focus = info[2][1]
-	mightCurrent = pools[0][1]
-	speedCurrent = pools[1][1]
-	intellectCurrent = pools[2][1]
-	mightMax = pools[0][2]
-	speedMax = pools[1][2]
-	intellectMax = pools[2][2]
-	mightEdge = pools[0][3]
-	speedEdge = pools[1][3]
-	intellectEdge = pools[2][3]
+	mightCurrent = int(pools[0][1])
+	speedCurrent = int(pools[1][1])
+	intellectCurrent = int(pools[2][1])
+	mightMax = int(pools[0][2])
+	speedMax = int(pools[1][2])
+	intellectMax = int(pools[2][2])
+	mightEdge = int(pools[0][3])
+	speedEdge = int(pools[1][3])
+	intellectEdge = int(pools[2][3])
 	skillsList = []
 	for skill in skillsData:
 		if skills.isSkill(skill[0]):

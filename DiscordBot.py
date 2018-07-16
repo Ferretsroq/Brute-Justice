@@ -177,17 +177,25 @@ class MyClient(discord.Client):
 			if(str(reaction) in CombatMessage.emojiNumbers):
 				pass
 			if(str(reaction) == CombatMessage.emojiCheck):
-				print('foo')
+				#print('foo')
 				targets = []
-				for react in reaction.message.reactions:
-					print('bar')
-					async for x in react.users():
-						if(self.activeUser == x and str(react) in CombatMessage.emojiNumbers):
+				for react in range(len(reaction.message.reactions)):
+					#print('bar')
+					async for x in reaction.message.reactions[react].users():#react.users():
+						#if(self.activeUser == x and str(react) in CombatMessage.emojiNumbers):
+						if(self.activeUser == x and str(reaction.message.reactions[react]) in CombatMessage.emojiNumbers):
 							targets.append(react)
-						print(x)
-				await self.activeMessage.message.edit(embed=self.activeMessage.embed, content="You are targeting {}!".format(str(targets[0])))
+						#print(x)
+				await self.activeMessage.InitializeFields()
+				if(len(targets) > 0):
+					await self.activeMessage.message.edit(embed=self.activeMessage.embed, content="You are targeting {}!".format(str(targets[0])))
+					#print(targets[0])
+					await self.activeMessage.ResolveTurn(targets[0])
+				else:
+					await self.activeMessage.message.edit(embed=self.activeMessage.embed, content="No target selected.")
+
 				await self.activeMessage.SetReactions()
-				print(targets)
+				#print(str(targets[0]))
 
 					#for user in react.users():
 					#	print('baz')
