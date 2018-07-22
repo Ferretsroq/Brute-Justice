@@ -67,3 +67,17 @@ def WriteSpreadsheet(spreadsheetID, sheet=1, cell='A1', value=0):
         spreadsheetId=spreadsheetId, range='Sheet{}!{}'.format(sheet, cell),
         valueInputOption='USER_ENTERED', body=body).execute()
     return result
+
+def WriteToNamedRange(spreadsheetID, rangeName='', value=0):
+	credentials = get_credentials()
+	http = credentials.authorize(httplib2.Http())
+	discoveryUrl = ('https://sheets.googleapis.com/$discovery/rest?'
+                    'version=v4')
+	service = discovery.build('sheets', 'v4', http=http, discoveryServiceUrl=discoveryUrl)
+	spreadsheetId = spreadsheetID
+	values = value
+	body = {'values': values}
+	result = service.spreadsheets().values().update(
+        spreadsheetId=spreadsheetId, range=rangeName,
+        valueInputOption='USER_ENTERED', body=body).execute()
+	return result

@@ -233,7 +233,7 @@ class MyClient(discord.Client):
 			#else:
 			#	await message.channel.send('Reaction sent')
 			#	await message.channel.send(str(reaction))
-			self.activeMessage = CombatMessage.CombatMessage('Theron', ['Chronal Feeder', 'Voltron', 'Crawlybugs', 'foo', 'bar', 'baz'], message.author.mention)
+			self.activeMessage = CombatMessage.CombatMessage('Subotai', ['Chronal Feeder', 'Voltron', 'Crawlybugs', 'foo', 'bar', 'baz'], message.author.mention)
 			self.activeUser = message.author
 			await self.activeMessage.send(message.channel)
 			#def check(reaction, user):
