@@ -12,6 +12,7 @@ import numpy as np
 #import PyPDF2 as pdf
 import BruteJusticeGrid as grid
 import CombatMessage
+import task_message
 
 from apiclient import discovery
 from oauth2client import client as cl
@@ -244,7 +245,8 @@ class MyClient(discord.Client):
 			#	await message.channel.send('No reaction')
 			#else:
 			#	await message.channel.send('You reacted with {}'.format(str(reaction)))
-			
+		elif(message.content.startswith('!task')):
+			await task_message.TaskMessage.create(message)
 		elif(message.content.startswith('!help')):
 			await message.channel.send('Hi there! My name is BruteJustice, the friendly robot!')
 			await message.channel.send('These are my current implemented commands:\n' + '\n'.join(implementedCommands)+'\nI hope you find that I am much friendlier here than I was in Midas. Those were my rebellious days.')
