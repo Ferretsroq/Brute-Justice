@@ -407,6 +407,7 @@ if(__name__ == '__main__'):
 	#InitializeMonsters(mm2Path, monsterDict)	
 	#InitializeMonsters(mm3Path, monsterDict)	
 	client = MyClient()
-	client.run('MzUzNjY0MTQwMTc2MjYxMTMx.DIzCkw.CPNh064jbITfV2Y2rke8PVhnPL8')
+	token = open('./discord_token').read()
+	client.run(token)
 	client.logout()
 	client.close()
