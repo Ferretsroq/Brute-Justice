@@ -133,6 +133,8 @@ class Character:
 		result = self.Challenge(level=creature.level, skills=['{} Attack'.format(stat.name), '{} Weapons'.format(self.weapon.name)], effort=effort, assets=assets)
 		if(result):
 			creature.hp -= self.weapon.value
+	def TakeDamage(self, damage):
+		self.intellect.reduce(self.speed.reduce(self.might.reduce(damage)))
 	def __repr__(self):
 		adventuring = 'ADVENTURING SKILLS:\n' + '\n'.join(self.adventureSkills) + '\n'
 		combat = '\nCOMBAT SKILLS:\n' + '\n'.join(self.combatSkills) + '\n'
